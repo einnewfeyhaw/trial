@@ -1,0 +1,19 @@
+# Environments
+venv/
+env/
+.venv/
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+
+# Paper artifacts (not needed for Colab runs)
+*.pdf
+*.zip
+
+# Duplicate of neurips_26/
+code_unzip/
+
+# Local editor/agent config
+.claude/
