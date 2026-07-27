@@ -45,7 +45,7 @@ Status key: ✅ DONE &nbsp; 🔄 RUNNING &nbsp; ⬜ TODO &nbsp; ⚠️ NEEDS DEC
 | Q1: reversal beyond one model | ⚠️ SEE G3 | Genuinely mixed evidence — do not overclaim. SO400M reversal is solid; SigLIP-B is not clean either direction. |
 | Q2: any benchmark beyond Winoground | ✅ DONE | ColorSwap (G2). This is the headline new result for iv2d. |
 | Q3: downstream LLM consumption (LLaVA) | ⬜ TODO / open question | Not run. State as committed future work, not a claim. |
-| Objective vs. architecture vs. matching-function isolation | 🔄 RUNNING | E5 (learned bilinear scorer, frozen embeddings, trained on ColorSwap, zero-shot eval on Winoground). This is v8Kz's item but answers iv2d's architecture question too. Results pending. |
+| Objective vs. architecture vs. matching-function isolation | ✅ DONE (negative) | See v8Kz item 4 below. |
 
 ### v8Kz (4 → target 5)
 
@@ -54,7 +54,7 @@ Status key: ✅ DONE &nbsp; 🔄 RUNNING &nbsp; ⬜ TODO &nbsp; ⚠️ NEEDS DEC
 | 1. Robustness of feature-importance measure | ⚠️ MIXED | See G1. Report honestly — this is not a clean win. |
 | 2. Each dim's actual contribution to cosine similarity | ✅ DONE | E2 cosine-mass-share is an exact identity, not a proxy. This fully answers the literal request regardless of how G1 nets out. |
 | 3. Spectral placement of C_mean/Δ vs. erasure gain | ✅ DONE (null result) | E6: all 5 bridge correlations null (p=0.14–0.74). C_mean concentrates in *low*-σ dims, opposite the paper's narrative. Concede directly: global SVD story and instance-specific erasure are independent mechanisms. |
-| 4. Objective vs. architecture vs. matching-function controls | 🔄 RUNNING | E5, in progress. |
+| 4. Objective vs. architecture vs. matching-function controls | ✅ DONE (negative result) | E5 sweep complete: as weight_decay relaxes and the learned bilinear scorer A moves further from cosine, zero-shot Winoground performance falls monotonically for all 5 models, dropping below cosine baseline at the loosest setting. Best zero-shot result across the whole sweep is the tightest regularization (+0.25–0.75pp over cosine) — i.e. barely different from cosine at all. Answers the "matching function" half of v8Kz's ask with a genuine negative: a global bilinear correction trained cross-benchmark (ColorSwap→Winoground) does not recover compositional signal, and more capacity only overfits. The "objective vs architecture" half (BLIP ITC/ITM or similar) was never built — see Open Items #7 for the go/no-go decision. |
 | 5. Rescope conclusions | ✅ DONE | See G6. |
 
 ### g6iB (4 → target 5)
@@ -114,6 +114,48 @@ split, not the GDrive URL, in any camera-ready methods section.
 > stands on its own controls (Table 2, and now ColorSwap above) regardless of
 > the spectral placement question.
 
+### v8Kz item 4 (matching-function control) — honest negative result
+
+> To isolate whether cosine-based matching specifically (rather than the
+> representation itself) is responsible, we tested a learned matching
+> function on the same frozen embeddings: `score(v,t) = v^T A t`, with `A`
+> initialized to identity (reproducing cosine exactly) and regularized
+> toward it by weight decay. We trained `A` on ColorSwap match/mismatch
+> pairs (700 train pairs) and evaluated zero-shot on Winoground (`A` never
+> sees Winoground during training), sweeping weight decay over
+> {1e-2, 1e-3, 1e-4} to test regularization strength directly rather than
+> assume a single setting is representative.
+>
+> The result is a genuine negative: as weight decay relaxes and `A` moves
+> further from cosine, zero-shot Winoground Group Score *falls*
+> monotonically for all five models, dropping below the cosine baseline at
+> the loosest setting, while training-set performance on ColorSwap keeps
+> improving — the standard signature of overfitting rather than a
+> recoverable correction. The best zero-shot result across the entire sweep
+> is the most tightly regularized setting, statistically indistinguishable
+> from cosine (+0.25 to +0.75 percentage points).
+>
+> We report this directly rather than omit it: a global bilinear correction
+> to cosine, learned on one compositional axis (color-attribute swaps) and
+> transferred to another (spatial-arrangement swaps), does not recover the
+> signal our probes suggest survives the projection. This does not
+> contradict the paper's central claim — mean-erasure (Table 2, and our new
+> ColorSwap result) demonstrates the information is recoverable by an
+> *instance-specific* intervention with access to both candidates — but it
+> does mean a fixed, learned, cross-benchmark matching function is not a
+> substitute for that, consistent with Section 5's finding that generic
+> (non-instance-specific) interventions fail. We did not additionally test
+> objective-vs-architecture isolation (e.g., matched-architecture comparisons
+> across training objectives); we flag this as a specific, well-scoped
+> direction for future work rather than claim it.
+
+**Strategic note:** this result reinforces, rather than undermines, the
+paper's actual core argument once reframed around instance-specificity
+(see Discussion section on the strategic pivot). It became a *point in favor*
+of "only instance-specific, foil-aware intervention works" — Section 5's
+argument, now doubly supported by both the original generic-intervention
+failures AND this cross-benchmark matching-function failure.
+
 ---
 
 ## Open items before rebuttal is submission-ready
@@ -137,3 +179,12 @@ split, not the GDrive URL, in any camera-ready methods section.
    identity) and stating the SigLIP-B ambiguity plainly rather than picking
    whichever number reads best per-paragraph — that's the failure mode from
    the last draft.
+7. **Go/no-go on E5a (BLIP ITC vs ITM, or another objective-isolation
+   control).** Three follow-up mechanism experiments in a row (E1/E2 mixed,
+   E6 null, E5 null) point the same direction: the paper's explanatory
+   story is weak, the erasure phenomenon itself is not. A fourth experiment
+   in the same family risks the same outcome for real engineering cost (new
+   model family, new preprocessing pipeline). Recommend deprioritizing E5a
+   and spending remaining time on items 1, 3, 4 above instead, which are
+   cheaper and directly close specific reviewer asks rather than probe the
+   mechanism further. Revisit only if rebuttal time budget allows after 1/3/4.
