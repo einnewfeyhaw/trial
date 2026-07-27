@@ -37,6 +37,7 @@ Outputs E1_robust_results.json. Embeddings are cached to .npz for fast reruns.
 import argparse
 import json
 import os
+import sys
 import warnings
 
 import numpy as np
@@ -50,6 +51,19 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import StandardScaler
 from tqdm import tqdm
 from transformers import AutoModel, AutoProcessor
+
+# CRITICAL FIX: this script (and the ORIGINAL submitted-paper scripts --
+# feature_importance.py, multi_model_correlation.py, multi_model_aro_correlation.py
+# -- all loaded haideraltahan/wds_sugarcrepe with dataset.select(range(min(limit,
+# len(dataset)))) and NO subset filter. We have direct empirical proof (from the
+# g6iB per-subset investigation) that the first 500 raw examples of this dataset
+# mirror are 100% "add_obj" -- meaning every one of those scripts, including the
+# ones behind the SUBMITTED PAPER'S OWN TABLE 1 (labeled "SugarCrepe Swap
+# Object"), was almost certainly run on add_obj-dominated data, not swap_obj as
+# labeled. This is not a new bug we introduced -- it predates this rebuttal.
+# Import the same subset filter already fixed and verified in E2/E7/E7b.
+sys.path.insert(0, os.path.dirname(__file__))
+from E2_direct_spectral import subset_of
 
 warnings.filterwarnings("ignore")
 os.environ.setdefault("OMP_NUM_THREADS", "4")
@@ -74,11 +88,12 @@ def get_projection_matrix(model, model_name):
     return None
 
 
-def extract_features(model_name, dataset, device, limit):
+def extract_features(model_name, dataset, device, limit, subset_filter):
     """Return X (n_samples, d) in the SVD basis, y, and the singular values S."""
     os.makedirs(CACHE_DIR, exist_ok=True)
+    tag = subset_filter or "UNFILTERED"
     cache = os.path.join(
-        CACHE_DIR, f"{model_name.replace('/', '_')}_sugarcrepe_{limit}.npz"
+        CACHE_DIR, f"{model_name.replace('/', '_')}_sugarcrepe_{tag}_{limit}.npz"
     )
     if os.path.exists(cache):
         print(f"  loading cached embeddings: {cache}")
@@ -100,10 +115,30 @@ def extract_features(model_name, dataset, device, limit):
     samples, labels = [], []
     is_siglip = "siglip" in model_name.lower()
 
+    # Filter to the target subset BEFORE capping at `limit`, matching E7/E7b.
+    if subset_filter:
+        filtered_indices = []
+        n_scanned = 0
+        for i, ex in enumerate(tqdm(dataset, desc=f"  filtering to {subset_filter}")):
+            n_scanned = i + 1
+            s = subset_of(ex)
+            if s is not None and subset_filter in s:
+                filtered_indices.append(i)
+                if len(filtered_indices) >= limit:
+                    break
+        if not filtered_indices:
+            print(f"  no examples matched subset '{subset_filter}'; skipping")
+            return None, None, None
+        print(f"  matched {len(filtered_indices)} '{subset_filter}' examples "
+              f"out of {n_scanned} scanned")
+        scoped_dataset = dataset.select(filtered_indices)
+    else:
+        print("  WARNING: no subset filter -- running on unfiltered blend "
+              "(NOT recommended; this reproduces the original bug)")
+        scoped_dataset = dataset.select(range(min(limit, len(dataset))))
+
     with torch.no_grad():
-        for example in tqdm(
-            dataset.select(range(min(limit, len(dataset)))), desc="  encoding"
-        ):
+        for example in tqdm(scoped_dataset, desc="  encoding"):
             img = example["0.webp"].convert("RGB")
             true_cap, false_cap = example["npy"][0], example["npy"][1]
 
@@ -170,9 +205,9 @@ def fit_mlp(X_tr, y_tr, seed):
     return clf
 
 
-def analyze(model_name, dataset, device, limit):
+def analyze(model_name, dataset, device, limit, subset_filter):
     print(f"\n=== {model_name} ===")
-    X, y, S = extract_features(model_name, dataset, device, limit)
+    X, y, S = extract_features(model_name, dataset, device, limit, subset_filter)
     if X is None:
         return None
 
@@ -271,18 +306,24 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=1500)
     ap.add_argument("--models", nargs="*", default=MODELS_TO_TEST)
+    ap.add_argument("--subset", default="swap_obj",
+                    help="SugarCrepe subset filter (matches E2/E7's subset_of()). "
+                         "Pass empty string to reproduce the original unfiltered "
+                         "bug for comparison purposes only -- do not use for "
+                         "rebuttal numbers.")
     ap.add_argument("--out", default="E1_robust_results.json")
     args = ap.parse_args()
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"device: {device}")
+    print(f"subset filter: {args.subset!r}")
 
     dataset = load_dataset("haideraltahan/wds_sugarcrepe", split="test")
 
     results = {}
     for name in args.models:
         try:
-            r = analyze(name, dataset, device, args.limit)
+            r = analyze(name, dataset, device, args.limit, args.subset)
             if r:
                 results[name] = r
                 with open(args.out, "w") as f:
