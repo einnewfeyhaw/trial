@@ -1,0 +1,112 @@
+{
+  "openai/clip-vit-base-patch32": {
+    "model": "openai/clip-vit-base-patch32",
+    "n_train_colorswap": 700,
+    "n_eval_winoground": 400,
+    "cosine_baseline_winoground": {
+      "text": 0.31,
+      "image": 0.1125,
+      "group": 0.09
+    },
+    "learned_bilinear_train_colorswap": {
+      "text": 0.4328571428571429,
+      "image": 0.20857142857142857,
+      "group": 0.15857142857142856
+    },
+    "learned_bilinear_eval_winoground_ZEROSHOT": {
+      "text": 0.305,
+      "image": 0.115,
+      "group": 0.095
+    },
+    "final_train_loss": 0.687048614025116,
+    "note": "eval is zero-shot: A trained on ColorSwap only, never sees Winoground"
+  },
+  "openai/clip-vit-large-patch14": {
+    "model": "openai/clip-vit-large-patch14",
+    "n_train_colorswap": 700,
+    "n_eval_winoground": 400,
+    "cosine_baseline_winoground": {
+      "text": 0.2825,
+      "image": 0.105,
+      "group": 0.075
+    },
+    "learned_bilinear_train_colorswap": {
+      "text": 0.36428571428571427,
+      "image": 0.18857142857142858,
+      "group": 0.13142857142857142
+    },
+    "learned_bilinear_eval_winoground_ZEROSHOT": {
+      "text": 0.28,
+      "image": 0.1025,
+      "group": 0.0775
+    },
+    "final_train_loss": 0.6875097751617432,
+    "note": "eval is zero-shot: A trained on ColorSwap only, never sees Winoground"
+  },
+  "laion/CLIP-ViT-B-32-laion2B-s34B-b79K": {
+    "model": "laion/CLIP-ViT-B-32-laion2B-s34B-b79K",
+    "n_train_colorswap": 700,
+    "n_eval_winoground": 400,
+    "cosine_baseline_winoground": {
+      "text": 0.35,
+      "image": 0.1125,
+      "group": 0.0825
+    },
+    "learned_bilinear_train_colorswap": {
+      "text": 0.6557142857142857,
+      "image": 0.3357142857142857,
+      "group": 0.3028571428571429
+    },
+    "learned_bilinear_eval_winoground_ZEROSHOT": {
+      "text": 0.3525,
+      "image": 0.115,
+      "group": 0.09
+    },
+    "final_train_loss": 0.6780341267585754,
+    "note": "eval is zero-shot: A trained on ColorSwap only, never sees Winoground"
+  },
+  "google/siglip-base-patch16-224": {
+    "model": "google/siglip-base-patch16-224",
+    "n_train_colorswap": 700,
+    "n_eval_winoground": 400,
+    "cosine_baseline_winoground": {
+      "text": 0.33,
+      "image": 0.13,
+      "group": 0.1025
+    },
+    "learned_bilinear_train_colorswap": {
+      "text": 0.6942857142857143,
+      "image": 0.48428571428571426,
+      "group": 0.4228571428571429
+    },
+    "learned_bilinear_eval_winoground_ZEROSHOT": {
+      "text": 0.325,
+      "image": 0.1425,
+      "group": 0.11
+    },
+    "final_train_loss": 0.6769757270812988,
+    "note": "eval is zero-shot: A trained on ColorSwap only, never sees Winoground"
+  },
+  "google/siglip-so400m-patch14-384": {
+    "model": "google/siglip-so400m-patch14-384",
+    "n_train_colorswap": 700,
+    "n_eval_winoground": 400,
+    "cosine_baseline_winoground": {
+      "text": 0.375,
+      "image": 0.165,
+      "group": 0.1225
+    },
+    "learned_bilinear_train_colorswap": {
+      "text": 0.7314285714285714,
+      "image": 0.5514285714285714,
+      "group": 0.5
+    },
+    "learned_bilinear_eval_winoground_ZEROSHOT": {
+      "text": 0.3725,
+      "image": 0.1625,
+      "group": 0.13
+    },
+    "final_train_loss": 0.6720477938652039,
+    "note": "eval is zero-shot: A trained on ColorSwap only, never sees Winoground"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "openai/clip-vit-base-patch32": {
+    "model": "openai/clip-vit-base-patch32",
+    "n_train_colorswap": 700,
+    "n_eval_winoground": 400,
+    "cosine_baseline_winoground": {
+      "text": 0.31,
+      "image": 0.1125,
+      "group": 0.09
+    },
+    "learned_bilinear_train_colorswap": {
+      "text": 0.4328571428571429,
+      "image": 0.20857142857142857,
+      "group": 0.15857142857142856
+    },
+    "learned_bilinear_eval_winoground_ZEROSHOT": {
+      "text": 0.305,
+      "image": 0.115,
+      "group": 0.095
+    },
+    "final_train_loss": 0.687048614025116,
+    "note": "eval is zero-shot: A trained on ColorSwap only, never sees Winoground"
+  }
+}
