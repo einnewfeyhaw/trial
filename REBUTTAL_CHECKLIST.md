@@ -11,15 +11,47 @@ Status key: ✅ DONE &nbsp; 🔄 RUNNING &nbsp; ⬜ TODO &nbsp; ⚠️ NEEDS DEC
 
 ---
 
+## 🚨 CRITICAL — cross-cutting, affects the submitted paper itself, not just this rebuttal
+
+**The paper's own Table 1 (SugarCrepe column, labeled "Swap Object") was almost
+certainly computed on the wrong data.** `feature_importance.py`,
+`multi_model_correlation.py`, and `multi_model_aro_correlation.py` — the
+original submitted-paper scripts — all load
+`haideraltahan/wds_sugarcrepe` with `dataset.select(range(min(limit,
+len(dataset))))` and **no subset filter**. We have direct, empirical proof
+(g6iB per-subset investigation, "Check 2") that the first 500 raw examples of
+this dataset mirror are **100% `add_obj`**, not `swap_obj`. This predates the
+rebuttal entirely — it is a labeling error already in the submitted
+manuscript, not something introduced by any of our new experiments.
+
+`E1_robust_probing.py` had the identical gap and has now been fixed (imports
+E2's already-verified `subset_of()` filter, defaults to `swap_obj`,
+cache keys updated so old unfiltered `.npz` files can't be silently reused).
+`E4_scale_ladder.py` had the same gap, same fix applied.
+
+**Consequence: every G1/G3 entry below that cites E1's prior output is
+provisional until E1 is rerun with the fix.** This must be disclosed in the
+**global AC response**, not buried in any single reviewer's thread — it's a
+paper-level issue, not an iv2d-specific one. Volunteering it now is far
+better than a reviewer finding it independently (same principle as the
+train/test-split disclosure).
+
+**Action:** rerun E1 with `--subset swap_obj` (the new default) across all 5
+models before finalizing ANY rebuttal text touching ρ, permutation
+importance, magnitude masking, or the reversal claim. Do not use any
+G1/G3-related number currently in this checklist until that rerun lands.
+
+---
+
 ## AC gating items (from meta-review — these are mandatory)
 
 | # | Mandate | Status | Evidence |
 |---|---|---|---|
-| G1 | Robustness of feature-importance measure | ⚠️ MIXED | E1 (permutation importance): only 2/5 models show significant scale-free anticorrelation (CLIP-L/14 masked, SO400M reversed; B/32, LAION, SigLIP-B null). E2 (access ratio, probe-free): cleaner signal but LAION contradicts the CLIP-family story (2.02, reversed) and SigLIP-B is basis-unstable (0.63 proj vs 5.99 pca). **Needs bootstrap CIs on E2 before this is presentable — see Open Items.** |
-| G2 | Gains on another benchmark, or proof 1×2 nullifies it | ✅ **DONE** | ColorSwap, all 5 models, full control suite. 1.8×–4.5× relative gain, p<0.0001 every model, `random_pair` null (p=0.30–0.78), single-caption controls hurt as expected. See draft text below. |
-| G3 | Reversal on more than one model | ⚠️ MIXED | Table 1 as submitted: SigLIP-base masked (−0.223), SO400M aligned (+0.394) — opposite signs, same family. E1 permutation importance: SigLIP-B is null (not masked, not aligned) — doesn't fully corroborate the original Table 1 direction. E2 PCA: both SigLIP models >1 (reversed), but access ratio for SigLIP-B is basis-dependent (0.63 vs 5.99). Reversal for SO400M is robust across every measure; SigLIP-B's status is genuinely unsettled. State that honestly. |
-| G4 | Why 1.7% variance is "structurally significant" | ✅ **DONE** | Retire ρ² entirely. E7 (bootstrapped, N=10,000, correctly filtered to swap_obj, n=245): access_ratio=0.484, 95% CI [0.448, 0.530], p=0.0 that ratio≥1 — masking reliable across every resample. Cross-validated independently by E2's point estimate (0.47, same model/dataset/subset, different script). Two independently-coded, now bug-fixed pipelines converging this tightly is strong evidence the number is real, not a proxy artifact. See draft text below. |
-| G5 | Erasure: comparable gains across 5 models | ✅ DONE (already in submission) | Table 4 of the paper already shows this for Winoground. ColorSwap (G2) now replicates it on a second benchmark. |
+| G1 | Robustness of feature-importance measure | ⚠️ **STALE — rerun required** | Previous E1 numbers (2/5 models significant, mixed directions) were computed on the SAME unfiltered/mislabeled data as the paper's own Table 1 (see critical note above). Not usable until E1 is rerun with the subset-filter fix. |
+| G2 | Gains on another benchmark, or proof 1×2 nullifies it | ✅ **DONE** | ColorSwap, all 5 models, full control suite. 1.8×–4.5× relative gain, p<0.0001 every model, `random_pair` null (p=0.30–0.78), single-caption controls hurt as expected. See draft text below. Unaffected by the subset-filter issue (ColorSwap has no such subset structure). |
+| G3 | Reversal on more than one model | ⚠️ **STALE — rerun required** | Same issue as G1. The SigLIP-base/SO400M opposite-sign data point from the submitted Table 1 may itself be affected if Table 1's SugarCrepe column is mislabeled data — needs re-verification post-E1-rerun before restating with confidence. |
+| G4 | Why 1.7% variance is "structurally significant" | ✅ **DONE** | Retire ρ² entirely. E7 (bootstrapped, N=10,000, correctly filtered to swap_obj, n=245): access_ratio=0.484, 95% CI [0.448, 0.530], p=0.0 that ratio≥1 — masking reliable across every resample. Cross-validated independently by E2's point estimate (0.47, same model/dataset/subset, different script). **Note: E7/E2 already had the subset fix applied before these numbers were generated — G4 is NOT affected by the critical issue above.** |
+| G5 | Erasure: comparable gains across 5 models | ✅ DONE (already in submission) | Table 4 of the paper already shows this for Winoground. ColorSwap (G2) now replicates it on a second benchmark. Erasure results never depended on SugarCrepe subset filtering (they're Winoground-only). |
 | G6 | Survival claim too broad | ✅ DONE | Scope conceded: object-level binding / shared-content interference in 2×2 cosine retrieval, not compositionality in general. Matches paper's own limitations section — this is a rescoping, not a retraction. |
 
 ---
