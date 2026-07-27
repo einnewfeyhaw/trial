@@ -161,24 +161,17 @@ def analyze(model_name, colorswap_items, winoground_items, device, args):
     V0te, V1te, T0te, T1te = encode_pairs(model, processor, device, winoground_items, is_siglip)
 
     dim = V0tr.shape[1]
-
-    # cosine baseline == A=I; must reproduce the paper's number
-    cos_scorer = Bilinear(dim).to(device)  # delta=0 => A=I
-    base_scores = group_scores(cos_scorer, V0te.to(device), V1te.to(device),
-                                T0te.to(device), T1te.to(device))
-
-    scorer, final_loss, train_scores = train_bilinear(
-        V0tr, V1tr, T0tr, T1tr, dim, device,
-        epochs=args.epochs, lr=args.lr, weight_decay=args.weight_decay,
-    )
-
-    with torch.no_grad():
-        eval_scores = group_scores(scorer, V0te.to(device), V1te.to(device),
-                                    T0te.to(device), T1te.to(device))
-
     del model
     if device == "cuda":
         torch.cuda.empty_cache()
+
+    # cosine baseline == A=I; must reproduce the paper's number. Computed
+    # once -- identical regardless of weight_decay, since it doesn't depend
+    # on training at all.
+    cos_scorer = Bilinear(dim).to(device)  # delta=0 => A=I
+    base_scores = group_scores(cos_scorer, V0te.to(device), V1te.to(device),
+                                T0te.to(device), T1te.to(device))
+    LN2 = float(np.log(2.0))
 
     res = {
         "model": model_name,
@@ -187,16 +180,43 @@ def analyze(model_name, colorswap_items, winoground_items, device, args):
         "cosine_baseline_winoground": {
             "text": base_scores[0], "image": base_scores[1], "group": base_scores[2],
         },
-        "learned_bilinear_train_colorswap": {
-            "text": train_scores[0], "image": train_scores[1], "group": train_scores[2],
-        },
-        "learned_bilinear_eval_winoground_ZEROSHOT": {
-            "text": eval_scores[0], "image": eval_scores[1], "group": eval_scores[2],
-        },
-        "final_train_loss": final_loss,
-        "note": "eval is zero-shot: A trained on ColorSwap only, never sees Winoground",
+        "epochs": args.epochs,
+        "lr": args.lr,
+        "sweep": {},
     }
-    print(json.dumps(res, indent=2))
+
+    # Sweep weight_decay to check whether the previous run's near-ln(2) loss
+    # (A barely moved off identity) was regularization starving the signal,
+    # versus a genuine absence of cross-benchmark transfer.
+    for wd in args.weight_decays:
+        print(f"  --- weight_decay={wd} ---")
+        scorer, final_loss, train_scores = train_bilinear(
+            V0tr, V1tr, T0tr, T1tr, dim, device,
+            epochs=args.epochs, lr=args.lr, weight_decay=wd,
+        )
+        with torch.no_grad():
+            eval_scores = group_scores(scorer, V0te.to(device), V1te.to(device),
+                                        T0te.to(device), T1te.to(device))
+        delta_A = float((scorer.delta.detach() ** 2).sum().sqrt().item())  # ||A - I||_F
+
+        res["sweep"][str(wd)] = {
+            "weight_decay": wd,
+            "final_train_loss": final_loss,
+            "loss_below_ln2": LN2 - final_loss,  # ~0 means A barely left identity
+            "A_minus_I_frobenius_norm": delta_A,
+            "learned_bilinear_train_colorswap": {
+                "text": train_scores[0], "image": train_scores[1], "group": train_scores[2],
+            },
+            "learned_bilinear_eval_winoground_ZEROSHOT": {
+                "text": eval_scores[0], "image": eval_scores[1], "group": eval_scores[2],
+            },
+        }
+        print(json.dumps(res["sweep"][str(wd)], indent=2))
+
+    res["note"] = ("eval is zero-shot: A trained on ColorSwap only, never sees "
+                    "Winoground. loss_below_ln2 near 0 at a given weight_decay "
+                    "means A barely moved off identity (=cosine) at that "
+                    "regularization strength.")
     return res
 
 
@@ -212,10 +232,17 @@ def main():
     ap.add_argument("--models", nargs="*", default=MODELS)
     ap.add_argument("--max-train", type=int, default=700)
     ap.add_argument("--max-eval", type=int, default=400)
-    ap.add_argument("--epochs", type=int, default=200)
+    ap.add_argument("--epochs", type=int, default=400,
+                    help="doubled from the first run (200) since weaker "
+                         "weight_decay settings need more steps to converge")
     ap.add_argument("--lr", type=float, default=1e-2)
-    ap.add_argument("--weight-decay", type=float, default=1e-2)
-    ap.add_argument("--out", default="E5_learned_scorer.json")
+    ap.add_argument("--weight-decays", type=float, nargs="+",
+                    default=[1e-4, 1e-3, 1e-2],
+                    help="sweep -- 1e-2 is what the first run used, where "
+                         "final_train_loss barely left ln(2). Weaker values "
+                         "test whether that was regularization starving the "
+                         "signal.")
+    ap.add_argument("--out", default="E5_learned_scorer_sweep.json")
     args = ap.parse_args()
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
