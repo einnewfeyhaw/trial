@@ -61,8 +61,8 @@ Status key: ✅ DONE &nbsp; 🔄 RUNNING &nbsp; ⬜ TODO &nbsp; ⚠️ NEEDS DEC
 
 | Item | Status | Notes |
 |---|---|---|
-| Q1: deployable inference mechanics | ⬜ TODO | Correct answer is top-k re-ranking erasure (candidate-set mean, not global corpus mean — a global mean is exactly the generic intervention Section 5 already shows fails). Not yet built. Prior draft wrongly proposed "corpus-mean erasure," which contradicts the paper's own Section 5. Do not reuse that language. |
-| Q2: 1.7% variance justification | 🔄 PARTIAL | Same as G4 — needs bootstrap before it's presentable. |
+| Q1: deployable inference mechanics | ✅ DONE | E3: top-K candidate-set erasure (retrieve top-K captions by cosine, erase their mean, re-rank). K=2 gives significant Group Score gain (9.0%→14.5%, p=0.0012), degrades toward baseline as K grows -- exactly the generic-intervention argument from Section 5, now demonstrated as a curve rather than asserted. **Caveat that must be in the rebuttal text:** Text Score drops at every K (each image gets its own independent erasure direction, breaking Prop 1's shared-C_mean symmetry) -- this is a real trade-off, not a free win. State it plainly. |
+| Q2: 1.7% variance justification | 🔄 RERUN NEEDED | E7 built a direct, probe-free statistic but its first run had a real bug (signed vs. abs-value summation) that produced access_ratio=8.60, contradicting E2's already-verified 0.47 by 18x in the opposite direction. Root cause found and fixed (see git log). **Not yet rerun** -- do not use E7_results.json on disk, it's the pre-fix number. Once rerun, use whichever of E2/E7 is canonical (recommend E2, already checklisted) and treat E7's separate top20pct_sv_dims section (unaffected by the bug, sums to 100% by construction) as a complementary, independently-valid statistic. |
 | Q3: what else explains remaining variance | ⬜ TODO | Open question, can answer with prose (candidate factors: cross-encoder direction alignment, training data frequency, attention-pooling geometry) without new experiments. |
 
 ---
