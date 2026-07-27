@@ -94,8 +94,17 @@ def inspect_dataset(dataset):
 
 
 def subset_of(example):
-    """Best-effort extraction of the SugarCrepe subset label."""
-    for key in ("subset", "type", "__key__", "cls"):
+    """Best-effort extraction of the SugarCrepe subset label.
+
+    "split.txt" is the actual field in haideraltahan/wds_sugarcrepe (found via
+    --inspect on Colab); the others are speculative fallbacks kept for
+    robustness against a differently-shaped mirror. Without "split.txt" this
+    always returns None, subset_filter never matches, and swap_obj filtering
+    silently fails -- this was checked into the repo without the fix that
+    Colab runs were actually using, so results reported as "swap_obj, n=245"
+    would NOT reproduce by running this file as it stood before this fix.
+    """
+    for key in ("split.txt", "subset", "type", "__key__", "cls"):
         if key in example and example[key] is not None:
             return str(example[key])
     return None

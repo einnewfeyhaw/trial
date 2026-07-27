@@ -47,6 +47,7 @@ Output: E7_results.json
 
 import json
 import os
+import sys
 import warnings
 
 import numpy as np
@@ -58,6 +59,15 @@ from transformers import CLIPModel, CLIPProcessor
 
 warnings.filterwarnings("ignore")
 os.environ.setdefault("OMP_NUM_THREADS", "4")
+
+# Reuse E2's subset filter rather than duplicate it. The dataset's subset
+# label lives in a "split.txt" field -- without this filter, the script
+# silently ran on the full 7-way SugarCrepe blend (swap_obj is only ~3% of
+# it) while still labeling its output "swap_obj subset", which was wrong.
+sys.path.insert(0, os.path.dirname(__file__))
+from E2_direct_spectral import subset_of
+
+SUBSET_FILTER = "swap_obj"
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 SEED = 42
@@ -88,11 +98,32 @@ def main():
     print(f"SVD: d_out={d_out}, SV range [{S.min():.3f}, {S.max():.3f}], "
           f"SV ratio max/min = {S.max()/S.min():.1f}×")
 
-    # ── 1. Load SugarCrepe (swap_obj) ─────────────────────────────────────────
+    # ── 1. Load SugarCrepe, filtered to swap_obj ──────────────────────────────
+    # Previous version loaded the full 7-way blend and just truncated to 500
+    # examples without any subset filter -- swap_obj is ~3% of the mirror, so
+    # that run was ~97% other subsets despite being labeled "swap_obj" in the
+    # output JSON. Filter properly using the same subset_of() as E2.
     print("Loading haideraltahan/wds_sugarcrepe ...")
-    dataset = load_dataset("haideraltahan/wds_sugarcrepe", split="test")
-    LIMIT = 500    # use up to 500 pairs for speed; swap_obj subset is ~245
-    dataset = dataset.select(range(min(LIMIT, len(dataset))))
+    full_dataset = load_dataset("haideraltahan/wds_sugarcrepe", split="test")
+    LIMIT = 500    # cap on FILTERED examples, for speed
+    filtered_indices = []
+    n_scanned = 0
+    for i, ex in enumerate(tqdm(full_dataset, desc="  filtering to swap_obj")):
+        n_scanned = i + 1
+        s = subset_of(ex)
+        if s is not None and SUBSET_FILTER in s:
+            filtered_indices.append(i)
+            if len(filtered_indices) >= LIMIT:
+                break
+    if not filtered_indices:
+        raise RuntimeError(
+            f"No examples matched subset filter '{SUBSET_FILTER}' via subset_of(). "
+            "Run E2_direct_spectral.py --inspect to check the field name/values "
+            "haven't changed on this dataset mirror."
+        )
+    print(f"  matched {len(filtered_indices)} swap_obj examples "
+          f"out of {n_scanned} scanned")
+    dataset = full_dataset.select(filtered_indices)
 
     # ── 2. Extract SVD-basis per-dimension contributions ──────────────────────
     # per_dim_match[i]    = (v'_i · t_match_i) for each pair
