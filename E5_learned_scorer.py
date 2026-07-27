@@ -71,23 +71,16 @@ def encode_pairs(model, processor, device, items, is_siglip):
     return torch.stack(V0), torch.stack(V1), torch.stack(T0), torch.stack(T1)
 
 
-def load_colorswap_items(path, limit):
-    """Load the local ColorSwap json/parquet produced during E3 and return
-    (img0,img1,cap0,cap1) tuples. Adjust the field names below if E3's
-    inspect step found different ones -- keep in sync with E3_second_2x2.py."""
-    from datasets import load_dataset as ld
-    ds = ld("json", data_files=path, split="train") if path.endswith(".json") else ld(path, split="train")
+def load_colorswap_items(path, limit, split="test"):
+    """Load local ColorSwap via E3_colorswap_local's loader (same data_dir
+    layout: <path>/<split>.json + <path>/images/), so this uses the exact
+    same data the E3 ColorSwap run used -- no separate/inconsistent loading
+    logic. Returns (img0,img1,cap0,cap1) tuples."""
+    from E3_colorswap_local import load_colorswap
+    rows = load_colorswap(path, split)
     items = []
-    for ex in ds.select(range(min(limit, len(ds)))):
-        img0 = ex.get("image_1") or ex.get("image_0") or ex.get("img0")
-        img1 = ex.get("image_2") or ex.get("image_1") or ex.get("img1")
-        c0 = ex.get("caption_1") or ex.get("caption_0")
-        c1 = ex.get("caption_2") or ex.get("caption_1")
-        if hasattr(img0, "convert"):
-            img0 = img0.convert("RGB")
-        if hasattr(img1, "convert"):
-            img1 = img1.convert("RGB")
-        items.append((img0, img1, str(c0), str(c1)))
+    for r in rows[:limit]:
+        items.append((r["image_1"], r["image_2"], str(r["caption_1"]), str(r["caption_2"])))
     return items
 
 
@@ -210,9 +203,14 @@ def analyze(model_name, colorswap_items, winoground_items, device, args):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--colorswap-path", required=True,
-                    help="local ColorSwap file/dir produced by the E3 run")
+                    help="ColorSwap data_dir (same --data-dir passed to "
+                         "E3_colorswap_local.py: contains <split>.json + images/)")
+    ap.add_argument("--colorswap-split", default="train",
+                    help="use ColorSwap's train split (700 pairs) to fit A, "
+                         "keeping the test split reserved for the separate "
+                         "G2 mean-erasure result -- no reuse across findings")
     ap.add_argument("--models", nargs="*", default=MODELS)
-    ap.add_argument("--max-train", type=int, default=300)
+    ap.add_argument("--max-train", type=int, default=700)
     ap.add_argument("--max-eval", type=int, default=400)
     ap.add_argument("--epochs", type=int, default=200)
     ap.add_argument("--lr", type=float, default=1e-2)
@@ -223,7 +221,8 @@ def main():
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"device: {device}")
 
-    colorswap_items = load_colorswap_items(args.colorswap_path, args.max_train)
+    colorswap_items = load_colorswap_items(
+        args.colorswap_path, args.max_train, split=args.colorswap_split)
     winoground_items = load_winoground_items(args.max_eval)
     print(f"ColorSwap train pairs: {len(colorswap_items)}")
     print(f"Winoground eval pairs: {len(winoground_items)}")
