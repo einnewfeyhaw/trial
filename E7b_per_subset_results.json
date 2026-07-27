@@ -1,0 +1,140 @@
+{
+  "model": "openai/clip-vit-base-patch32",
+  "n_scanned_total": 7511,
+  "limit_per_subset": 300,
+  "subsets": {
+    "add_obj": {
+      "n_pairs": 300,
+      "mean_cosine_similarity": 0.30683577060699463,
+      "top20pct_sv_dims": {
+        "cosine_mass_fraction": 0.5412692427635193,
+        "auc_discriminability_fraction": 0.2110379710798979,
+        "amplification_ratio_cosine_over_auc": 2.5647955199427
+      },
+      "access_ratio": {
+        "point_estimate": 8.08272933959961,
+        "ci_95": [
+          7.896329188346863,
+          8.2502769947052
+        ],
+        "p_ratio_ge_1": 1.0,
+        "direction": "alignment",
+        "reliability": 1.0
+      }
+    },
+    "add_att": {
+      "n_pairs": 300,
+      "mean_cosine_similarity": 0.31252625584602356,
+      "top20pct_sv_dims": {
+        "cosine_mass_fraction": 0.5353615283966064,
+        "auc_discriminability_fraction": 0.20755718920354124,
+        "amplification_ratio_cosine_over_auc": 2.5793446637572424
+      },
+      "access_ratio": {
+        "point_estimate": 7.809885501861572,
+        "ci_95": [
+          7.610111045837402,
+          7.989857745170593
+        ],
+        "p_ratio_ge_1": 1.0,
+        "direction": "alignment",
+        "reliability": 1.0
+      }
+    },
+    "replace_obj": {
+      "n_pairs": 300,
+      "mean_cosine_similarity": 0.311928391456604,
+      "top20pct_sv_dims": {
+        "cosine_mass_fraction": 0.5327970385551453,
+        "auc_discriminability_fraction": 0.1738061786377278,
+        "amplification_ratio_cosine_over_auc": 3.065466617649299
+      },
+      "access_ratio": {
+        "point_estimate": 0.5405385494232178,
+        "ci_95": [
+          0.50029436647892,
+          0.5803907856345176
+        ],
+        "p_ratio_ge_1": 0.0,
+        "direction": "masking",
+        "reliability": 1.0
+      }
+    },
+    "replace_att": {
+      "n_pairs": 300,
+      "mean_cosine_similarity": 0.3145592212677002,
+      "top20pct_sv_dims": {
+        "cosine_mass_fraction": 0.5295591354370117,
+        "auc_discriminability_fraction": 0.17857626331973145,
+        "amplification_ratio_cosine_over_auc": 2.965450870079322
+      },
+      "access_ratio": {
+        "point_estimate": 0.4635592997074127,
+        "ci_95": [
+          0.4276987321674824,
+          0.5000549912452698
+        ],
+        "p_ratio_ge_1": 0.0,
+        "direction": "masking",
+        "reliability": 1.0
+      }
+    },
+    "replace_rel": {
+      "n_pairs": 300,
+      "mean_cosine_similarity": 0.3096477687358856,
+      "top20pct_sv_dims": {
+        "cosine_mass_fraction": 0.5386227369308472,
+        "auc_discriminability_fraction": 0.20973466365644652,
+        "amplification_ratio_cosine_over_auc": 2.5681150056012294
+      },
+      "access_ratio": {
+        "point_estimate": 7.623283386230469,
+        "ci_95": [
+          7.426230871677399,
+          7.782111477851868
+        ],
+        "p_ratio_ge_1": 1.0,
+        "direction": "alignment",
+        "reliability": 1.0
+      }
+    },
+    "swap_obj": {
+      "n_pairs": 245,
+      "mean_cosine_similarity": 0.3102462887763977,
+      "top20pct_sv_dims": {
+        "cosine_mass_fraction": 0.5308161973953247,
+        "auc_discriminability_fraction": 0.20154529015288541,
+        "amplification_ratio_cosine_over_auc": 2.633731589523454
+      },
+      "access_ratio": {
+        "point_estimate": 0.48387402296066284,
+        "ci_95": [
+          0.4476555034518242,
+          0.5289383724331855
+        ],
+        "p_ratio_ge_1": 0.0,
+        "direction": "masking",
+        "reliability": 1.0
+      }
+    },
+    "swap_att": {
+      "n_pairs": 300,
+      "mean_cosine_similarity": 0.30996623635292053,
+      "top20pct_sv_dims": {
+        "cosine_mass_fraction": 0.5281504988670349,
+        "auc_discriminability_fraction": 0.22487520287103252,
+        "amplification_ratio_cosine_over_auc": 2.3486382318904804
+      },
+      "access_ratio": {
+        "point_estimate": 0.6337591409683228,
+        "ci_95": [
+          0.5924414724111557,
+          0.6777595594525337
+        ],
+        "p_ratio_ge_1": 0.0,
+        "direction": "masking",
+        "reliability": 1.0
+      }
+    }
+  }
+}

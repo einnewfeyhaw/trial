@@ -189,10 +189,20 @@ failures AND this cross-benchmark matching-function failure.
 
 ## Open items before rebuttal is submission-ready
 
-1. ~~E2 bootstrap CIs~~ — ✅ DONE via E7 (cross-validated, see G4). Still
-   open: **`--per-subset`** across all 7 SugarCrepe splits, which directly
-   answers BTbD's "2 of 7 splits" complaint and hasn't been run on either
-   script yet.
+1. ~~E2 bootstrap CIs~~ — ✅ DONE via E7 (cross-validated, see G4).
+   ~~`--per-subset`~~ — ✅ DONE via E7b, all 7 SugarCrepe categories. Key
+   finding: the aggregate top20pct_sv_dims amplification (2.35–3.07×) is
+   consistent in the SAME direction across all 7 categories with no
+   exceptions — the robust, generalizable claim. The finer-grained
+   access_ratio statistic is bimodal (masking for swap_obj/swap_att/
+   replace_obj/replace_att; alignment for add_obj/add_att/replace_rel) --
+   add_obj/add_att's flip is well-explained by a verified caption-length
+   asymmetry (false caption is a strict superset, consistent with Hsieh
+   et al. 2023's hackability finding, already cited). replace_rel's flip
+   has NO verified mechanistic explanation yet (the captions are same-length,
+   structurally identical to the masking categories) -- do not assert a
+   causal story for it in any rebuttal text; report the aggregate finding
+   only, or flag replace_rel as an open question if pressed.
 2. ~~E5 results~~ — ✅ DONE (negative result, see v8Kz item 4 above).
 3. **Koishigarina differentiation** — still unresolved; the earlier draft's
    argument didn't hold up. Needs either a real experiment or a more careful
