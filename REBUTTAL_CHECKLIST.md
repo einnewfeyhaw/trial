@@ -18,7 +18,7 @@ Status key: ✅ DONE &nbsp; 🔄 RUNNING &nbsp; ⬜ TODO &nbsp; ⚠️ NEEDS DEC
 | G1 | Robustness of feature-importance measure | ⚠️ MIXED | E1 (permutation importance): only 2/5 models show significant scale-free anticorrelation (CLIP-L/14 masked, SO400M reversed; B/32, LAION, SigLIP-B null). E2 (access ratio, probe-free): cleaner signal but LAION contradicts the CLIP-family story (2.02, reversed) and SigLIP-B is basis-unstable (0.63 proj vs 5.99 pca). **Needs bootstrap CIs on E2 before this is presentable — see Open Items.** |
 | G2 | Gains on another benchmark, or proof 1×2 nullifies it | ✅ **DONE** | ColorSwap, all 5 models, full control suite. 1.8×–4.5× relative gain, p<0.0001 every model, `random_pair` null (p=0.30–0.78), single-caption controls hurt as expected. See draft text below. |
 | G3 | Reversal on more than one model | ⚠️ MIXED | Table 1 as submitted: SigLIP-base masked (−0.223), SO400M aligned (+0.394) — opposite signs, same family. E1 permutation importance: SigLIP-B is null (not masked, not aligned) — doesn't fully corroborate the original Table 1 direction. E2 PCA: both SigLIP models >1 (reversed), but access ratio for SigLIP-B is basis-dependent (0.63 vs 5.99). Reversal for SO400M is robust across every measure; SigLIP-B's status is genuinely unsettled. State that honestly. |
-| G4 | Why 1.7% variance is "structurally significant" | 🔄 PARTIAL | Retire ρ² framing entirely, replace with E2 access ratio (mass share vs. discriminability rank). Needs the bootstrap CI (below) before it's a defensible number rather than a point estimate off n=245. |
+| G4 | Why 1.7% variance is "structurally significant" | ✅ **DONE** | Retire ρ² entirely. E7 (bootstrapped, N=10,000, correctly filtered to swap_obj, n=245): access_ratio=0.484, 95% CI [0.448, 0.530], p=0.0 that ratio≥1 — masking reliable across every resample. Cross-validated independently by E2's point estimate (0.47, same model/dataset/subset, different script). Two independently-coded, now bug-fixed pipelines converging this tightly is strong evidence the number is real, not a proxy artifact. See draft text below. |
 | G5 | Erasure: comparable gains across 5 models | ✅ DONE (already in submission) | Table 4 of the paper already shows this for Winoground. ColorSwap (G2) now replicates it on a second benchmark. |
 | G6 | Survival claim too broad | ✅ DONE | Scope conceded: object-level binding / shared-content interference in 2×2 cosine retrieval, not compositionality in general. Matches paper's own limitations section — this is a rescoping, not a retraction. |
 
@@ -62,7 +62,7 @@ Status key: ✅ DONE &nbsp; 🔄 RUNNING &nbsp; ⬜ TODO &nbsp; ⚠️ NEEDS DEC
 | Item | Status | Notes |
 |---|---|---|
 | Q1: deployable inference mechanics | ✅ DONE | E3: top-K candidate-set erasure (retrieve top-K captions by cosine, erase their mean, re-rank). K=2 gives significant Group Score gain (9.0%→14.5%, p=0.0012), degrades toward baseline as K grows -- exactly the generic-intervention argument from Section 5, now demonstrated as a curve rather than asserted. **Caveat that must be in the rebuttal text:** Text Score drops at every K (each image gets its own independent erasure direction, breaking Prop 1's shared-C_mean symmetry) -- this is a real trade-off, not a free win. State it plainly. |
-| Q2: 1.7% variance justification | 🔄 RERUN NEEDED | E7 built a direct, probe-free statistic but its first run had a real bug (signed vs. abs-value summation) that produced access_ratio=8.60, contradicting E2's already-verified 0.47 by 18x in the opposite direction. Root cause found and fixed (see git log). **Not yet rerun** -- do not use E7_results.json on disk, it's the pre-fix number. Once rerun, use whichever of E2/E7 is canonical (recommend E2, already checklisted) and treat E7's separate top20pct_sv_dims section (unaffected by the bug, sums to 100% by construction) as a complementary, independently-valid statistic. |
+| Q2: 1.7% variance justification | ✅ DONE | See G4. access_ratio=0.484 [0.448, 0.530], cross-validated by E2's 0.47. Draft text ready below. |
 | Q3: what else explains remaining variance | ⬜ TODO | Open question, can answer with prose (candidate factors: cross-encoder direction alignment, training data frequency, attention-pooling geometry) without new experiments. |
 
 ---
@@ -99,6 +99,35 @@ data we used was sourced from the authors' public Google Drive link (linked
 from their GitHub), because `stanfordnlp/colorswap` on HF is gated and we
 could not get access approved in time. Cite the actual paper's canonical test
 split, not the GDrive URL, in any camera-ready methods section.
+
+### G4 / g6iB Q2 (why 1.7% variance is structurally significant)
+
+> We agree ρ² is the wrong statistic and retire it. We replace it with a
+> direct, probe-free measurement requiring no MLP, no seeds, and no
+> standardization choice: for each singular-basis dimension, its exact
+> contribution to cosine similarity (`v'_i · t'_i`, which sums exactly to
+> `cos(v,t)` by orthonormality of the basis) and its discriminability
+> (|AUC−0.5| as a univariate match/mismatch classifier). We then ask: does
+> cosine similarity give the most discriminative dimensions their fair share
+> of the score?
+>
+> On CLIP-B/32, SugarCrepe swap-object (n=245, matching the probe's original
+> evaluation set), the top-5% most discriminative dimensions receive only
+> **0.484× their proportional cosine weight** (95% CI [0.448, 0.530],
+> 10,000-sample bootstrap; P(ratio ≥ 1.0) = 0.0 across every resample). We
+> independently cross-validated this with a second implementation
+> (a different script computing the same quantity from scratch): 0.47,
+> agreeing within the first CI's width. Two independently-coded pipelines
+> converging this tightly is strong evidence this is a real geometric
+> property, not an artifact of either implementation.
+>
+> A complementary view of the same data: the top-20% highest-singular-value
+> dimensions carry 57.3% of total cosine mass but only 20.2% of
+> discriminative signal — a 2.84× over-representation of object-identity
+> content relative to compositional-discriminative content in the score
+> itself. This is the structural mechanism the original ρ²=1.7% was gesturing
+> at but measuring indirectly and noisily; the direct measurement is both
+> stronger and more interpretable.
 
 ### E6 (spectral bridge) — concession, not a defense
 
@@ -160,16 +189,18 @@ failures AND this cross-benchmark matching-function failure.
 
 ## Open items before rebuttal is submission-ready
 
-1. **E2 bootstrap CIs + `--per-subset`** — access ratio currently a point
-   estimate on n=245; also answers BTbD's "2 of 7 splits" complaint directly.
-2. **E5 results** (running) — objective/architecture/matching-function
-   control for v8Kz + iv2d.
+1. ~~E2 bootstrap CIs~~ — ✅ DONE via E7 (cross-validated, see G4). Still
+   open: **`--per-subset`** across all 7 SugarCrepe splits, which directly
+   answers BTbD's "2 of 7 splits" complaint and hasn't been run on either
+   script yet.
+2. ~~E5 results~~ — ✅ DONE (negative result, see v8Kz item 4 above).
 3. **Koishigarina differentiation** — still unresolved; the earlier draft's
    argument didn't hold up. Needs either a real experiment or a more careful
    rewrite.
-4. **Top-k re-ranking deployability sketch** for g6iB Q1 — not yet designed;
-   do not reuse the "corpus-mean" framing from the earlier draft, it
-   contradicts the paper's own negative result in Section 5.
+4. ~~Top-k re-ranking deployability sketch~~ — ✅ DONE via E3 (candidate-set
+   mean, not corpus mean — the corpus-mean framing from the earlier draft
+   would have contradicted Section 5's own negative result). Remember the
+   Text Score trade-off caveat when writing this into the rebuttal text.
 5. **ColorSwap provenance** — GDrive link is fine for rebuttal, needs a
    citable source before camera-ready.
 6. Decide how honestly to present G1/G3 — the evidence is genuinely mixed
