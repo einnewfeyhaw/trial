@@ -1,0 +1,38 @@
+{
+  "model": "openai/clip-vit-base-patch32",
+  "dataset": "haideraltahan/wds_sugarcrepe (swap_obj subset)",
+  "n_pairs": 500,
+  "d_out": 512,
+  "sv_range": {
+    "min": 0.0003178836195729673,
+    "max": 0.9670615196228027,
+    "ratio_max_over_min": 3042.187255859375
+  },
+  "mean_cosine_similarity": 0.30903467535972595,
+  "top20pct_sv_dims": {
+    "n_dims": 102,
+    "cosine_mass_fraction": 0.5945343971252441,
+    "auc_discriminability_fraction": 0.20819408924087304,
+    "amplification_ratio_cosine_over_auc": 2.855673757564699,
+    "interpretation": "Top-20% SVD dims carry 59.5% of cosine mass but only 20.8% of discriminative signal \u2014 a 2.86\u00d7 over-representation of object content in the score."
+  },
+  "bottom80pct_sv_dims": {
+    "n_dims": 410,
+    "cosine_mass_fraction": 0.4054654538631439,
+    "auc_discriminability_fraction": 0.7918059107591269
+  },
+  "access_ratio": {
+    "k_top_discriminative_dims": 26,
+    "uniform_baseline_fraction": 0.05078125,
+    "point_estimate": 8.600786209106445,
+    "ci_95": [
+      8.430838322639465,
+      8.762321257591248
+    ],
+    "p_ratio_ge_1": 1.0,
+    "n_bootstrap": 10000,
+    "null_sv_squared": 1.1801800727844238,
+    "interpretation": "Access ratio 8.601 (95% CI [8.431, 8.762]): the most discriminative 5% of dimensions receive 8.60\u00d7 their proportional cosine weight (vs 1.0 for uniform, 1.18\u00d7 for SV\u00b2-proportional null). Masking is reliable (p=1.0000 that ratio \u2265 1.0)."
+  },
+  "structural_argument": "The 1.7% (\u03c1\u00b2) from the original Table 1 is a property of the MLP proxy, not of the geometric effect. The direct measurement shows: top-20% SVD dims carry 59.5% of cosine similarity mass but only 20.8% of per-dimension discriminability. This 2.86\u00d7 amplification of object-level cosine mass over compositional-discriminative mass is the structural mechanism. The Spearman \u03c1\u00b2 is the wrong statistic to report \u2014 it measures correlation between a scale-confounded proxy and rank, not the actual geometric suppression of compositional signal in the similarity score."
+}

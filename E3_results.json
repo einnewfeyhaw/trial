@@ -1,0 +1,96 @@
+{
+  "model": "openai/clip-vit-base-patch32",
+  "dataset": "haideraltahan/wds_winoground",
+  "n_pairs": 400,
+  "caption_pool_size": 800,
+  "k_sweep": [
+    2,
+    4,
+    8,
+    16,
+    32
+  ],
+  "baseline": {
+    "text_score": 0.31,
+    "image_score": 0.1125,
+    "group_score": 0.09
+  },
+  "results_per_k": {
+    "2": {
+      "K": 2,
+      "text_score": 0.285,
+      "image_score": 0.28,
+      "group_score": 0.145,
+      "group_ci95": [
+        0.1125,
+        0.18
+      ],
+      "group_delta_vs_baseline": 0.055,
+      "p_one_sided_vs_baseline": 0.0012,
+      "relative_gain": 1.6111111111111112,
+      "hit_rate_both_captions_in_topK_img0": 0.3575,
+      "hit_rate_at_least_one_caption_in_topK_img0": 0.54
+    },
+    "4": {
+      "K": 4,
+      "text_score": 0.2425,
+      "image_score": 0.155,
+      "group_score": 0.105,
+      "group_ci95": [
+        0.075,
+        0.135
+      ],
+      "group_delta_vs_baseline": 0.015,
+      "p_one_sided_vs_baseline": 0.1824,
+      "relative_gain": 1.1666666666666667,
+      "hit_rate_both_captions_in_topK_img0": 0.5075,
+      "hit_rate_at_least_one_caption_in_topK_img0": 0.6225
+    },
+    "8": {
+      "K": 8,
+      "text_score": 0.2475,
+      "image_score": 0.13,
+      "group_score": 0.0925,
+      "group_ci95": [
+        0.065,
+        0.1225
+      ],
+      "group_delta_vs_baseline": 0.0025,
+      "p_one_sided_vs_baseline": 0.4691,
+      "relative_gain": 1.027777777777778,
+      "hit_rate_both_captions_in_topK_img0": 0.625,
+      "hit_rate_at_least_one_caption_in_topK_img0": 0.7475
+    },
+    "16": {
+      "K": 16,
+      "text_score": 0.24,
+      "image_score": 0.12,
+      "group_score": 0.0875,
+      "group_ci95": [
+        0.06,
+        0.1175
+      ],
+      "group_delta_vs_baseline": -0.0025,
+      "p_one_sided_vs_baseline": 0.6108,
+      "relative_gain": 0.9722222222222222,
+      "hit_rate_both_captions_in_topK_img0": 0.7625,
+      "hit_rate_at_least_one_caption_in_topK_img0": 0.835
+    },
+    "32": {
+      "K": 32,
+      "text_score": 0.23,
+      "image_score": 0.12,
+      "group_score": 0.0825,
+      "group_ci95": [
+        0.055,
+        0.11
+      ],
+      "group_delta_vs_baseline": -0.0075,
+      "p_one_sided_vs_baseline": 0.7488,
+      "relative_gain": 0.9166666666666667,
+      "hit_rate_both_captions_in_topK_img0": 0.835,
+      "hit_rate_at_least_one_caption_in_topK_img0": 0.9
+    }
+  },
+  "note": "C_mean is approximated from top-K captions retrieved by standard cosine similarity. No foil caption access required at query time. The hit_rate_both metric measures how often the ground-truth paired captions both appear in the top-K, providing an oracle upper bound on how closely the dynamic C_mean approximates the ground-truth C_mean."
+}
