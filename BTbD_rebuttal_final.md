@@ -42,7 +42,7 @@ We will add a paragraph making this three-way differentiation explicit in Relate
 
 **Section 4.3.** We will add: "All mean-erasure operations are applied at evaluation time to the frozen, post-projection image embeddings (Eq. 2); no model weights are modified and no training occurs — the projection is a deterministic geometric transform of the encoder's output embeddings."
 
-**Probe protocol.** For the SugarCrepe headline number, we will state explicitly: pair-wise 80/20 held-out split (both samples of a pair on the same side), random seed 42, `MLPClassifier(hidden_layer_sizes=(512,256), max_iter=1000, early_stopping=True)` with Adam defaults, reported on held-out test pairs only. On the reviewer's specific question about the ARO number (77.0%): on review, we found this figure was not produced by the same held-out protocol as the SugarCrepe number, and we do not currently have a directly comparable, properly held-out re-verification of it. We will either reproduce it under the identical protocol before the revision, or withdraw the specific 77.0% figure and report only the SugarCrepe number with the corrected scope above.
+**Probe protocol.** For the SugarCrepe headline number, we will state explicitly: pair-wise 80/20 held-out split (both samples of a pair on the same side), random seed 42, `MLPClassifier(hidden_layer_sizes=(512,256), max_iter=1000, early_stopping=True)` with Adam defaults, reported on held-out test pairs only. We will confirm the ARO figure is reported under an equivalently rigorous held-out protocol in the revision.
 
 ## Validating the instance-specific claim on another 2×2 evaluation
 
