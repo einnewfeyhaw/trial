@@ -1,264 +1,2283 @@
 {
   "model": "llava-hf/llava-1.5-7b-hf",
   "dataset": "haideraltahan/wds_winoground",
-  "n_pairs": 400,
-  "parse_failures": 0,
-  "LLaVA": {
-    "text_score": 0.235,
-    "image_score": 0.235,
-    "group_score": 0.235
+  "n_pairs": 150,
+  "seed": 42,
+  "load_in_8bit": true,
+  "LLaVA_pair_score": {
+    "naive_single_order": 0.2733333333333333,
+    "robust_order_consistent": 0.12
+  },
+  "position_bias": {
+    "total_queries": 600,
+    "chose_A": 301,
+    "chose_B": 299,
+    "unparsed": 0,
+    "A_rate": 0.5016666666666667,
+    "B_rate": 0.49833333333333335
   },
   "CLIP_L14_ITC_baseline": {
     "text_score": 0.2825,
     "image_score": 0.105,
     "group_score": 0.075
   },
-  "delta_vs_CLIP_L14": {
-    "text_score": -0.04749999999999999,
-    "image_score": 0.13,
-    "group_score": 0.15999999999999998
+  "comparison": {
+    "note": "LLaVA pair-score is a TEXT/PAIR-score analog (each image picks its caption), not a true Winoground Image/Group score. Compare to CLIP Text (0.2825) and Group (0.075).",
+    "naive_minus_CLIP_text": -0.009166666666666656,
+    "naive_minus_CLIP_group": 0.1983333333333333,
+    "robust_minus_CLIP_text": -0.16249999999999998,
+    "robust_minus_CLIP_group": 0.045
   },
-  "note": "LLaVA uses frozen CLIP-L/14 visual features fed into Vicuna-7B via MLP, never computing cosine similarity. If LLaVA >> CLIP-L/14 ITC, the compositional information survived the encoder and cosine is the bottleneck.",
   "per_pair": [
-    {
-      "idx": 0,
-      "c0": "an old person kisses a young person",
-      "c1": "a young person kisses an old person",
-      "pred0": "B",
-      "raw0": "B",
-      "pred1": "B",
-      "raw1": "B",
-      "text": 0,
-      "image": 0,
-      "group": 0
-    },
-    {
-      "idx": 1,
-      "c0": "the taller person hugs the shorter person",
-      "c1": "the shorter person hugs the taller person",
-      "pred0": "B",
-      "raw0": "B",
-      "pred1": "B",
-      "raw1": "B",
-      "text": 0,
-      "image": 0,
-      "group": 0
-    },
     {
       "idx": 2,
       "c0": "the masked wrestler hits the unmasked wrestler",
       "c1": "the unmasked wrestler hits the masked wrestler",
-      "pred0": "A",
-      "raw0": "A",
-      "pred1": "A",
-      "raw1": "A",
-      "text": 0,
-      "image": 0,
-      "group": 0
-    },
-    {
-      "idx": 3,
-      "c0": "a person watches an animal",
-      "c1": "an animal watches a person",
-      "pred0": "A",
-      "raw0": "A",
-      "pred1": "A",
-      "raw1": "A",
-      "text": 0,
-      "image": 0,
-      "group": 0
-    },
-    {
-      "idx": 4,
-      "c0": "the person without earrings pays the person with earrings",
-      "c1": "the person with earrings pays the person without earrings",
-      "pred0": "B",
-      "raw0": "B",
-      "pred1": "B",
-      "raw1": "B",
-      "text": 0,
-      "image": 0,
-      "group": 0
-    },
-    {
-      "idx": 5,
-      "c0": "a bird eats a snake",
-      "c1": "a snake eats a bird",
-      "pred0": "A",
-      "raw0": "A",
-      "pred1": "A",
-      "raw1": "A",
-      "text": 0,
-      "image": 0,
-      "group": 0
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
     },
     {
       "idx": 6,
       "c0": "a plant was harmed by another organism, and that organism br",
       "c1": "another organism was harmed by a plant, and that plant broke",
-      "pred0": "A",
-      "raw0": "A",
-      "pred1": "A",
-      "raw1": "A",
-      "text": 0,
-      "image": 0,
-      "group": 0
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
     },
     {
       "idx": 7,
       "c0": "a bottle is in water",
       "c1": "water is in a bottle",
-      "pred0": "A",
-      "raw0": "A",
-      "pred1": "B",
-      "raw1": "B",
-      "text": 1,
-      "image": 1,
-      "group": 1
-    },
-    {
-      "idx": 8,
-      "c0": "a tree smashed into a car",
-      "c1": "a car smashed into a tree",
-      "pred0": "A",
-      "raw0": "A",
-      "pred1": "B",
-      "raw1": "B",
-      "text": 1,
-      "image": 1,
-      "group": 1
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 1,
+      "robust": 1
     },
     {
       "idx": 9,
       "c0": "people fall on the leaves",
       "c1": "the leaves fall on people",
-      "pred0": "B",
-      "raw0": "B",
-      "pred1": "B",
-      "raw1": "B",
-      "text": 0,
-      "image": 0,
-      "group": 0
+      "i0": [
+        "B",
+        "A"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
     },
     {
       "idx": 10,
       "c0": "the sail rests below the water",
       "c1": "the water rests below the sail",
-      "pred0": "A",
-      "raw0": "A",
-      "pred1": "A",
-      "raw1": "A",
-      "text": 0,
-      "image": 0,
-      "group": 0
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
     },
     {
       "idx": 11,
       "c0": "there is a table below someone",
       "c1": "there is someone below a table",
-      "pred0": "B",
-      "raw0": "B",
-      "pred1": "B",
-      "raw1": "B",
-      "text": 0,
-      "image": 0,
-      "group": 0
-    },
-    {
-      "idx": 12,
-      "c0": "the image shows a computer on top of books",
-      "c1": "the image shows books on top of a computer",
-      "pred0": "B",
-      "raw0": "B",
-      "pred1": "B",
-      "raw1": "B",
-      "text": 0,
-      "image": 0,
-      "group": 0
-    },
-    {
-      "idx": 13,
-      "c0": "a caterpillar with some plants",
-      "c1": "a plant with some caterpillars",
-      "pred0": "A",
-      "raw0": "A",
-      "pred1": "B",
-      "raw1": "B",
-      "text": 1,
-      "image": 1,
-      "group": 1
-    },
-    {
-      "idx": 14,
-      "c0": "there is a mug in some grass",
-      "c1": "there is some grass in a mug",
-      "pred0": "A",
-      "raw0": "A",
-      "pred1": "B",
-      "raw1": "B",
-      "text": 1,
-      "image": 1,
-      "group": 1
-    },
-    {
-      "idx": 15,
-      "c0": "there are more skiers than snowboarders",
-      "c1": "there are more snowboarders than skiers",
-      "pred0": "A",
-      "raw0": "A",
-      "pred1": "A",
-      "raw1": "A",
-      "text": 0,
-      "image": 0,
-      "group": 0
-    },
-    {
-      "idx": 16,
-      "c0": "there are fewer forks than spoons",
-      "c1": "there are fewer spoons than forks",
-      "pred0": "B",
-      "raw0": "B",
-      "pred1": "B",
-      "raw1": "B",
-      "text": 0,
-      "image": 0,
-      "group": 0
-    },
-    {
-      "idx": 17,
-      "c0": "there are more ladybugs than flowers",
-      "c1": "there are more flowers than ladybugs",
-      "pred0": "A",
-      "raw0": "A",
-      "pred1": "B",
-      "raw1": "B",
-      "text": 1,
-      "image": 1,
-      "group": 1
-    },
-    {
-      "idx": 18,
-      "c0": "there is less orange juice than milk",
-      "c1": "there is less milk than orange juice",
-      "pred0": "B",
-      "raw0": "B",
-      "pred1": "B",
-      "raw1": "B",
-      "text": 0,
-      "image": 0,
-      "group": 0
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 1,
+      "robust": 0
     },
     {
       "idx": 19,
       "c0": "there is more dirt than empty space in the jar",
       "c1": "there is more empty space than dirt in the jar",
-      "pred0": "A",
-      "raw0": "A",
-      "pred1": "A",
-      "raw1": "A",
-      "text": 0,
-      "image": 0,
-      "group": 0
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 25,
+      "c0": "the person with the white collared shirt waters the plant wh",
+      "c1": "the person with the white collared shirt holds the plant whi",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 26,
+      "c0": "the taller person chops food and the shorter person eats foo",
+      "c1": "the taller person eats food and the shorter person chops foo",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 29,
+      "c0": "a brown dog is on a white couch",
+      "c1": "a white dog is on a brown couch",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 1,
+      "robust": 1
+    },
+    {
+      "idx": 31,
+      "c0": "The red book is above the yellow book and below the blue boo",
+      "c1": "The yellow book is above the blue book and below the red boo",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 34,
+      "c0": "pointy bushes are behind rectangular bushes",
+      "c1": "rectangular bushes are behind pointy bushes",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 37,
+      "c0": "soft shoes are on a smooth floor",
+      "c1": "smooth shoes are on a soft floor",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 38,
+      "c0": "the happy person is on the right and the sad person is on th",
+      "c1": "the sad person is on the right and the happy person is on th",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 43,
+      "c0": "a big cat is next to a small dog",
+      "c1": "a small cat is next to a big dog",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 1,
+      "robust": 0
+    },
+    {
+      "idx": 45,
+      "c0": "a cold drink on a hot day",
+      "c1": "a hot drink on a cold day",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 1,
+      "robust": 1
+    },
+    {
+      "idx": 53,
+      "c0": "driving off the road and on the unpaved terrain",
+      "c1": "driving on the road and off the unpaved terrain",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 1,
+      "robust": 0
+    },
+    {
+      "idx": 55,
+      "c0": "the green one can fit inside the blue one and the blue one c",
+      "c1": "the green one can fit outside the blue one and the blue one ",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 59,
+      "c0": "there are three bananas and two apples",
+      "c1": "there are two bananas and three apples",
+      "i0": [
+        "B",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 64,
+      "c0": "the dog's leg is on the person's torso",
+      "c1": "the person's leg is on the dog's torso",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 65,
+      "c0": "the animal's eyes are bigger than the person's",
+      "c1": "the person's eyes are bigger than the animal's",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 66,
+      "c0": "the taller person's arm is around the shorter person's shoul",
+      "c1": "the shorter person's arm is around the taller person's shoul",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 68,
+      "c0": "it ran away while they pursued",
+      "c1": "they ran away while it pursued",
+      "i0": [
+        "B",
+        "A"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 69,
+      "c0": "almost everyone is in a boat and one is swimming",
+      "c1": "one is in a boat and almost everyone is swimming",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 72,
+      "c0": "it's a fire truck",
+      "c1": "it's a truck fire",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 1,
+      "robust": 1
+    },
+    {
+      "idx": 74,
+      "c0": "walking out on a rock",
+      "c1": "rocking out on a walk",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 1,
+      "robust": 1
+    },
+    {
+      "idx": 75,
+      "c0": "the kid with the magnifying glass looks at them",
+      "c1": "the kid looks at them with the magnifying glass",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 77,
+      "c0": "the people with shoes are touching each other",
+      "c1": "the people are touching each other with shoes",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 85,
+      "c0": "the person who is wearing a crown is kissing a frog",
+      "c1": "the person is kissing a frog who is wearing a crown",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 88,
+      "c0": "meat with potatoes",
+      "c1": "potatoes with meat",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 89,
+      "c0": "the person in pink was close to not winning",
+      "c1": "the person in pink was not close to winning",
+      "i0": [
+        "B",
+        "A"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 90,
+      "c0": "two humans and one wheel",
+      "c1": "two wheels and one human",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 1,
+      "robust": 1
+    },
+    {
+      "idx": 93,
+      "c0": "two boats and one direction down the stream",
+      "c1": "one boat and two directions down the stream",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 1,
+      "robust": 0
+    },
+    {
+      "idx": 94,
+      "c0": "The dog rides without a visible tongue",
+      "c1": "The dog rides with a visible tongue out",
+      "i0": [
+        "B",
+        "A"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 96,
+      "c0": "leaves its shedding",
+      "c1": "shedding its leaves",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 1,
+      "robust": 0
+    },
+    {
+      "idx": 97,
+      "c0": "they are using no bait but still got fish",
+      "c1": "they are using bait but still got no fish",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 99,
+      "c0": "the dog wears as a hat what someone would normally bite",
+      "c1": "the dog bites what someone would normally wear as a hat",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 1,
+      "robust": 1
+    },
+    {
+      "idx": 100,
+      "c0": "the happy one is on the left and the upset one is on the rig",
+      "c1": "the upset one is on the left and the happy one is on the rig",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 103,
+      "c0": "the lion is loud and the lionness is quiet",
+      "c1": "the lion is quiet and the lionness is loud",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 105,
+      "c0": "light colored dog with dark colored cat",
+      "c1": "dark colored dog with light colored cat",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 1,
+      "robust": 1
+    },
+    {
+      "idx": 106,
+      "c0": "someone is wearing a black hat and yellow shirt",
+      "c1": "someone is wearing a yellow hat and black shirt",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 109,
+      "c0": "blue pants and green top",
+      "c1": "green pants and blue top",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 113,
+      "c0": "black dog wearing a brown sweater",
+      "c1": "brown dog wearing a black sweater",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 1,
+      "robust": 0
+    },
+    {
+      "idx": 118,
+      "c0": "circular food on heart-shaped wood",
+      "c1": "heart-shaped food on circular wood",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 120,
+      "c0": "the balloon in the middle has less air and the other balloon",
+      "c1": "the balloon in the middle has more air and the other balloon",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 122,
+      "c0": "big fish beside a small person",
+      "c1": "small fish beside a big person",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 123,
+      "c0": "the train is moving fast while the person is still",
+      "c1": "the train is still while the person is moving fast",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 1,
+      "robust": 1
+    },
+    {
+      "idx": 127,
+      "c0": "there's a metal bottle with a plastic lid",
+      "c1": "there's a plastic bottle with a metal lid",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 130,
+      "c0": "the cup on the left is filled first and the cup on the right",
+      "c1": "the cup on the left is filled second and the cup on the righ",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 133,
+      "c0": "there is a split banana",
+      "c1": "there is a banana split",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 139,
+      "c0": "the dog is in the driver's seat and the person is in the pas",
+      "c1": "the dog is in the passenger's seat and the person is in the ",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 143,
+      "c0": "there are more hats than people",
+      "c1": "there are more people than hats",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 144,
+      "c0": "there are more people than stools",
+      "c1": "there are more stools than people",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 1,
+      "robust": 0
+    },
+    {
+      "idx": 149,
+      "c0": "boat house",
+      "c1": "house boat",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 1,
+      "robust": 1
+    },
+    {
+      "idx": 152,
+      "c0": "spoon holding honey",
+      "c1": "honey holding spoon",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 154,
+      "c0": "a dog is using a wheelchair next to a person",
+      "c1": "a person is using a wheelchair next to a dog",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 157,
+      "c0": "the flowers are taller than the people",
+      "c1": "the people are taller than the flowers",
+      "i0": [
+        "B",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 158,
+      "c0": "there's a human in a stroller next to a dog",
+      "c1": "there's a dog in a stroller next to a human",
+      "i0": [
+        "B",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 159,
+      "c0": "a person is casting a shadow beside a ball",
+      "c1": "a ball is casting a shadow beside a person",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 162,
+      "c0": "a person underneath lights",
+      "c1": "lights underneath a person",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 1,
+      "robust": 0
+    },
+    {
+      "idx": 164,
+      "c0": "mind in the clouds",
+      "c1": "clouds in the mind",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 1,
+      "robust": 0
+    },
+    {
+      "idx": 165,
+      "c0": "there's a phone on a map",
+      "c1": "there's a map on a phone",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 167,
+      "c0": "an adult is flexing beside a child",
+      "c1": "a child is flexing beside an adult",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 1,
+      "robust": 1
+    },
+    {
+      "idx": 169,
+      "c0": "a cat is underneath a red blanket",
+      "c1": "a red blanket is underneath a cat",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 170,
+      "c0": "the person is bigger than the house",
+      "c1": "the house is bigger than the person",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 175,
+      "c0": "parent pointing at child",
+      "c1": "child pointing at parent",
+      "i0": [
+        "B",
+        "A"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 178,
+      "c0": "an adult kisses a child",
+      "c1": "a child kisses an adult",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 1,
+      "robust": 0
+    },
+    {
+      "idx": 180,
+      "c0": "the baby on the phone is next to an adult",
+      "c1": "the baby is next to an adult on the phone",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 1,
+      "robust": 1
+    },
+    {
+      "idx": 184,
+      "c0": "a pink scoop of ice cream on top and a blue scoop on bottom",
+      "c1": "a pink scoop of ice cream on bottom and a blue scoop on top",
+      "i0": [
+        "B",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 188,
+      "c0": "a fish is jumping from left to right",
+      "c1": "a fish is jumping from right to left",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 190,
+      "c0": "the shrimp are peeled then the shrimp are cooked",
+      "c1": "the shrimp are cooked then the shrimp are peeled",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 1,
+      "robust": 0
+    },
+    {
+      "idx": 191,
+      "c0": "the coffee is poured before it is ground",
+      "c1": "it is ground before the coffee is poured",
+      "i0": [
+        "B",
+        "A"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 192,
+      "c0": "the potato is washed and then it is cut",
+      "c1": "the potato is cut and then it is washed",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 198,
+      "c0": "The kid throws the pancake and the adult sees it",
+      "c1": "The kids see the pancake and the adult throws it",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 201,
+      "c0": "a person wearing a bear mask in blue on the left hand side o",
+      "c1": "a person wearing a panda mask with glasses in blue on the le",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 203,
+      "c0": "left is red and right is blue",
+      "c1": "left is blue and right is red",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 1,
+      "robust": 1
+    },
+    {
+      "idx": 209,
+      "c0": "the cube is smaller than the shape whose lateral faces meet ",
+      "c1": "the shape whose lateral faces meet at a vertex is smaller th",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 211,
+      "c0": "there are more apples than pears",
+      "c1": "there are more pears than apples",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 213,
+      "c0": "more water than oil",
+      "c1": "more oil than water",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 217,
+      "c0": "the one in front is faster than the other one",
+      "c1": "the other one is faster than the one in front",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 218,
+      "c0": "You can catch more flies with honey than you can with vinega",
+      "c1": "You can catch more flies with vinegar than you can with hone",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 1,
+      "robust": 0
+    },
+    {
+      "idx": 220,
+      "c0": "a shadow within the line",
+      "c1": "a line within the shadow",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 1,
+      "robust": 0
+    },
+    {
+      "idx": 221,
+      "c0": "the brave in the face of fear",
+      "c1": "fear in the face of the brave",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 225,
+      "c0": "the red car is behind the blue car",
+      "c1": "the blue car is behind the red car",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 226,
+      "c0": "the driver wearing a shirt is in front of the other person w",
+      "c1": "the driver wearing a sleeveless top is in front of the other",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 227,
+      "c0": "an object that rolls is on some wood",
+      "c1": "some wood is on an object that rolls",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 228,
+      "c0": "a cat viewing a human on a screen",
+      "c1": "a human viewing a cat on a screen",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 1,
+      "robust": 1
+    },
+    {
+      "idx": 230,
+      "c0": "a mike in the right hand while raising the left",
+      "c1": "a mike in the left hand while raising the right",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 231,
+      "c0": "a person with long hair behind a person with a beard",
+      "c1": "a person with a beard behind a person with long hair",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 1,
+      "robust": 0
+    },
+    {
+      "idx": 240,
+      "c0": "flat at the bottom and pointy on top",
+      "c1": "flat on top and pointy at the bottom",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 1,
+      "robust": 0
+    },
+    {
+      "idx": 241,
+      "c0": "seat numbers increasing from left to right",
+      "c1": "seat numbers increasing from right to left",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 243,
+      "c0": "more hair on the person's face than on their head",
+      "c1": "more hair on the person's head than on their face",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 244,
+      "c0": "the knife on the left and the fork on the right",
+      "c1": "the knife on the right and the fork on the left",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 246,
+      "c0": "cars of bits",
+      "c1": "bits of cars",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 247,
+      "c0": "a person on top of the world",
+      "c1": "the world on top of a person",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 248,
+      "c0": "two people; the one on the right has curly hair and the one ",
+      "c1": "two people; the one on the left has curly hair and the one o",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 1,
+      "robust": 0
+    },
+    {
+      "idx": 249,
+      "c0": "first the cream, then the jam",
+      "c1": "first the jam, then the cream",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 250,
+      "c0": "more kisses than hugs",
+      "c1": "more hugs than kisses",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 1,
+      "robust": 1
+    },
+    {
+      "idx": 251,
+      "c0": "an inflatable flamingo on a person",
+      "c1": "a person on an inflatable flamingo",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 253,
+      "c0": "a large pink inflatable flamingo along with some other lilos",
+      "c1": "a large white inflatable flamingo along with some other lilo",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 257,
+      "c0": "an adult is reading to their young child",
+      "c1": "their young child is reading to an adult",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 259,
+      "c0": "Young person playing baseball with a green bat and blue ball",
+      "c1": "Young person playing baseball with a blue bat and green ball",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 264,
+      "c0": "there are less gloves than masks",
+      "c1": "there are less masks than gloves",
+      "i0": [
+        "B",
+        "A"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 268,
+      "c0": "the cat on the left of the photo has its right paw ahead of ",
+      "c1": "the cat on the left of the photo has its left paw ahead of i",
+      "i0": [
+        "B",
+        "A"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 271,
+      "c0": "the person with facial hair cycles and the other person runs",
+      "c1": "the person with facial hair runs and the other person cycles",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 278,
+      "c0": "the person on the left is dancing and the person on the very",
+      "c1": "the person on the left is sitting on the sofa and the person",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 280,
+      "c0": "the large person is drinking from the small coffee cup",
+      "c1": "the small person is drinking from the large coffee cup",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 1,
+      "robust": 0
+    },
+    {
+      "idx": 281,
+      "c0": "hot rubber and cool metal",
+      "c1": "cool rubber and hot metal",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 283,
+      "c0": "rough outside but smooth inside",
+      "c1": "smooth outside but rough inside",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 284,
+      "c0": "the green one is fast and the one in white is comparatively ",
+      "c1": "the green one is slow and the one in white is comparatively ",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 289,
+      "c0": "the circle is above the cross",
+      "c1": "the cross is above the circle",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 1,
+      "robust": 0
+    },
+    {
+      "idx": 292,
+      "c0": "the skipping rope color is different to the shoelaces but si",
+      "c1": "the skipping rope color is similar to the shoelaces but diff",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 293,
+      "c0": "the blue balloon is being lifted by the weight",
+      "c1": "the weight is being lifted by the blue balloon",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 294,
+      "c0": "the sea is rough but the rocks are smooth",
+      "c1": "the sea is smooth but the rocks are rough",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 305,
+      "c0": "visiting animals at home can be fun",
+      "c1": "animals visiting at home can be fun",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 313,
+      "c0": "the moon prevents the sun's rays from falling on the earth",
+      "c1": "the earth prevents the sun's rays from falling on the moon",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 318,
+      "c0": "two persons wearing one scarf",
+      "c1": "one person wearing two scarfs",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 320,
+      "c0": "the cow is over the moon",
+      "c1": "the moon is over the cow",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 322,
+      "c0": "cat house",
+      "c1": "house cat",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 1,
+      "robust": 0
+    },
+    {
+      "idx": 326,
+      "c0": "outswam the person in the red swimcap",
+      "c1": "the person in the red swimcap swamout",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 329,
+      "c0": "a person without glasses pushes a person with glasses sittin",
+      "c1": "a person with glasses pushes a person without glasses sittin",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 330,
+      "c0": "what is green will soon be yellow",
+      "c1": "what is yellow will soon be green",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 331,
+      "c0": "soon this animal not with a tail will have one",
+      "c1": "soon this animal with a tail will not have one",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 333,
+      "c0": "fishing for compliments",
+      "c1": "compliments for fishing",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 1,
+      "robust": 0
+    },
+    {
+      "idx": 334,
+      "c0": "that person dusting off their hands",
+      "c1": "that person hands off their dusting",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 335,
+      "c0": "a person wearing black shoes cleaning a bookshelf with an or",
+      "c1": "a person wearing green shoes cleaning a bookshelf with an or",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 1,
+      "robust": 1
+    },
+    {
+      "idx": 336,
+      "c0": "a person with short hair is happily ironing a light blue shi",
+      "c1": "a person with long hair is happily ironing a light blue shir",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 338,
+      "c0": "child in front facing row of yellow rubber ducks",
+      "c1": "front facing child in row of yellow rubber ducks",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 1,
+      "robust": 0
+    },
+    {
+      "idx": 339,
+      "c0": "a bird cooking a person",
+      "c1": "a person cooking a bird",
+      "i0": [
+        "B",
+        "A"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 345,
+      "c0": "a worker in a yellow hat uses a drill to the left of where t",
+      "c1": "the opening in the wall is to the left of where a worker in ",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 347,
+      "c0": "A right hand pulls a glove onto a left hand",
+      "c1": "A left hand pulls a glove onto a right hand",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 349,
+      "c0": "A person whispering into a dog's ear",
+      "c1": "A dog whispering into a person's ear",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 1,
+      "robust": 1
+    },
+    {
+      "idx": 351,
+      "c0": "walking someone cut lines into green plants",
+      "c1": "someone walking lines cut into green plants",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 352,
+      "c0": "a volcano above water makes steam",
+      "c1": "water above a volcano makes steam",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 354,
+      "c0": "an adult putting a helmet on a child",
+      "c1": "a child putting a helmet on an adult",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 1,
+      "robust": 0
+    },
+    {
+      "idx": 355,
+      "c0": "An adult wearing purple lying next to a child",
+      "c1": "An adult lying next to a child wearing purple",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 356,
+      "c0": "a fencer who is wearing black pants having a point scored ag",
+      "c1": "a fencer having a point scored against them by another fence",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 362,
+      "c0": "a modern office complex with many windows above a nicely lan",
+      "c1": "a nicely landscaped lawn above a modern office complex with ",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 364,
+      "c0": "some are parking in a train",
+      "c1": "some are training in a park",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 1,
+      "robust": 1
+    },
+    {
+      "idx": 367,
+      "c0": "the glasses full of water are above the person's head and le",
+      "c1": "the person's head and leg are above the glasses full of wate",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 370,
+      "c0": "two sparklers for one hand",
+      "c1": "one sparkler for two hands",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 372,
+      "c0": "a spider towering over a dog",
+      "c1": "a dog towering over a spider",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 1,
+      "robust": 0
+    },
+    {
+      "idx": 373,
+      "c0": "a car going into a hollow tube",
+      "c1": "a hollow tube going into a car",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 374,
+      "c0": "two people wearing clothes of the same colors are on differe",
+      "c1": "two people wearing clothes of different colors are on the sa",
+      "i0": [
+        "B",
+        "A"
+      ],
+      "i1": [
+        "B",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 376,
+      "c0": "a person near water using a lasso",
+      "c1": "near a person using a water lasso",
+      "i0": [
+        "A",
+        "A"
+      ],
+      "i1": [
+        "A",
+        "A"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 380,
+      "c0": "two kids on a pool floatie and one kid swimming",
+      "c1": "one kid on a pool floatie and two kids swimming",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 385,
+      "c0": "a person smiles at another person wearing a checked shirt wh",
+      "c1": "a person wearing a checked shirt smiles at another person wh",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "B",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 386,
+      "c0": "two versions of one person",
+      "c1": "one version of two persons",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 393,
+      "c0": "head in the clouds",
+      "c1": "clouds in the head",
+      "i0": [
+        "B",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
+    },
+    {
+      "idx": 397,
+      "c0": "a large living thing in front of a large non-living thing",
+      "c1": "a large non-living thing in front of a large living thing",
+      "i0": [
+        "A",
+        "B"
+      ],
+      "i1": [
+        "A",
+        "B"
+      ],
+      "naive": 0,
+      "robust": 0
     }
   ]
 }
