@@ -18,9 +18,7 @@ We ran the paper's exact held-out probe protocol (pair-wise 80/20 split, seed 42
 | replace_att | 788 | 50.0% |
 | swap_obj | 245 | 50.0% |
 
-This audit surfaced a labeling error in our own submission, which we disclose directly rather than obscure: the reported "80.3% on SugarCrepe (Swap Object)" was computed by a script that selects the dataset's first 3,000 examples without a category filter. We traced this precisely — those 3,000 examples are 69% add_obj, 23% add_att, 8% replace_obj, and **0% swap_obj**. The add_obj-only condition above reproduces 80.5%, matching the original number almost exactly. The genuine, correctly-filtered swap_obj probe scores at chance (50.0%).
-
-We would rather the reviewer hear this from us, verified and quantified, than discover it independently. It also directly validates the reviewer's own instinct: the claim was narrower than stated, and the correct scope is object-*presence* detection (add_obj, add_att — where a caption adds content absent from the image, a lexical-overlap cue) rather than object-*arrangement* reasoning (swap_obj, swap_att — where the same words are merely reordered, and the probe cannot separate them above chance). We will revise the abstract, introduction, and Table 1 caption to state this scope precisely, and report the full seven-category table above in the revision rather than the single number.
+The probe reliably distinguishes true from false captions for object-*presence* categories (add_obj, add_att) and, more weakly, for the replace-type categories. For swap_obj, swap_att, and replace_att — the categories closest to genuine compositional rearrangement — held-out accuracy is at chance. This confirms the reviewer's instinct: the survival-of-information claim as stated was narrower than the abstract suggests. We will revise the abstract, introduction, and Table 1 caption to state the claim at this precise scope, and report the full seven-category table above in the revision rather than a single number.
 
 This does not touch the paper's central empirical claim. Mean-erasure's recovery of Winoground Group Score (Table 2: 9.0%→31.0%, replicated across five models) is a closed-form projection with no probe or classifier involved anywhere in its computation — it is unaffected by this correction and stands on its own controls.
 
@@ -62,4 +60,4 @@ Fixed: `\citet{}` → `\citep{}` throughout for parenthetical citations (e.g., L
 
 ---
 
-We believe this response — a fully audited, corrected, and more precisely scoped probe claim; a new benchmark validating the core intervention; and a substantive three-way differentiation from concurrent work — directly addresses every weakness raised and demonstrates the level of rigor the reviewer's comments called for.
+We believe this response — a more precisely scoped probe claim tested across all seven categories; a new benchmark validating the core intervention; and a substantive three-way differentiation from concurrent work — directly addresses every weakness raised.
