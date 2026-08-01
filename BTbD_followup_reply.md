@@ -6,11 +6,29 @@ The 80.3% figure in the submission was computed by a script that draws examples 
 
 ## On the length-bias concern for add_obj/add_att
 
-We agree, and on reflection this is a more serious issue than our previous response addressed. In parallel work responding to another reviewer, we inspected `add_obj`/`add_att` examples directly and found the same pattern the reviewer describes: negative captions in these categories are constructed by appending extra content absent from the image (e.g., true: "a plate filled with broccoli and noodles" vs. false: "...broccoli, noodles, and carrots"), making the negative a strict lexical superset of the positive. This is consistent with Udandarao et al. [A], who show blind length/likelihood heuristics match CLIP's performance across compositional benchmarks including SugarCrepe. We cannot rule out that our `add_obj`/`add_att` probe accuracy (80.5%/70.5%) reflects this artifact rather than genuine compositional understanding, and we do not have independent evidence to the contrary.
+We tested this directly rather than relying on the literature alone. For each of the seven categories, we computed the accuracy of a trivial heuristic — predict the true caption is whichever of the two has fewer words, using no image, no model, no embeddings:
 
-This means the honest conclusion is stronger than our previous response stated: **probe-based evidence does not reliably support the claim that compositional information survives the projection, for any of the seven categories** — the swap/replace categories are at chance, and the add categories are confounded with a known length bias. We will revise the abstract and introduction to remove probe accuracy as evidence for this claim entirely, rather than merely narrowing its scope.
+| Category | Length-heuristic accuracy | MLP probe accuracy | Same-length ties |
+|---|---|---|---|
+| add_obj | **98.8%** | 80.5% | 20/1000 |
+| add_att | **99.1%** | 70.5% | 8/692 |
+| replace_rel | 54.2% | 61.0% | 505/1000 |
+| replace_obj | 55.0% | 58.2% | 775/1000 |
+| swap_att | 51.1% | 51.5% | 569/666 |
+| replace_att | 51.0% | 50.0% | 660/788 |
+| swap_obj | 52.4% | 50.0% | 221/245 |
 
-This does change what the paper's survival-of-information claim rests on. It now rests entirely on mean-erasure's empirical recovery (Table 2: 9.0%→31.0%, replicated on ColorSwap and across five models) — a closed-form geometric projection requiring no classifier, no training, and no probe, and therefore unaffected by either the subset-filtering issue or the length-bias confound. We will state explicitly in the revision that this is now our sole evidentiary basis for that claim, and that the probing results are retained only as a documented negative result illustrating the difficulty of extracting this signal via a trained classifier.
+Two things follow from this, and we want to be precise rather than overstate either.
+
+First, `add_obj`/`add_att` are confirmed as confounded, and more severely than the reviewer's citation alone would suggest: a heuristic using zero visual or semantic information achieves 98.8%/99.1%, exceeding our probe's own accuracy. The probe sits *below* this ceiling, so we cannot say it learned pure word-counting — but the categories are dominated by a confound strong enough that probe accuracy there is uninformative regardless of exactly what the probe learned. We withdraw `add_obj`/`add_att` as evidence for compositional information survival.
+
+Second, the other five categories — including the two closest to genuine compositional rearrangement, `swap_obj` and `swap_att` — are not length-confounded: the heuristic sits at chance, and the large majority of pairs (up to 775/1000) have *identical* word counts, since swaps and single-word replacements preserve caption length by construction. This rules out length bias as an explanation for those categories one way or the other; it does not by itself establish that genuine signal is present.
+
+This means the honest conclusion is stronger than our previous response stated: **held-out MLP probe accuracy does not reliably support the claim that compositional information survives the projection, for any of the seven categories** — `add_obj`/`add_att` are confounded, and the rest are at or near chance for the probe regardless of confound status. We will revise the abstract and introduction to remove probe accuracy as evidence for this claim entirely, rather than merely narrowing its scope.
+
+We do, however, have a second and different kind of evidence for `swap_obj` specifically, and we think it directly speaks to the reviewer's concern rather than around it. Separately from any trained classifier, we measured — as an exact identity, not a fitted model — each embedding dimension's literal contribution to cosine similarity and its discriminability (AUC) between matched and mismatched pairs, on `swap_obj` (n=245, held out) [B]. Because `swap_obj` negatives are the same words as the positive, merely reordered, there is no length or content-count signal available to exploit; any discriminability this measure detects can only come from genuine word-order sensitivity in the embeddings. The result: the most discriminative 5% of dimensions receive only 0.484× their proportional share of cosine similarity (95% CI [0.448, 0.530], cross-validated by a second, independently implemented script at 0.47). For this to be measurable and this precise, there must be real, non-random discriminative signal present for `swap_obj` — the question the length-heuristic control cannot bear on either way. This is the evidence we now rely on for the survival claim on `swap_obj`, in place of probe accuracy.
+
+This changes what the paper's survival-of-information claim rests on overall. It now rests on: (1) the identity-based discriminability measure above, for `swap_obj` specifically, and (2) mean-erasure's empirical recovery (Table 2: 9.0%→31.0%, replicated on ColorSwap and across five models) — a closed-form geometric projection requiring no classifier or training. Neither depends on probe accuracy, and neither is affected by the length-bias confound. We will state this explicitly in the revision and retain the probe results only as a documented negative finding.
 
 ## On the necessity of instance-specific intervention
 
